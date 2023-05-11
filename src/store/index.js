@@ -1,6 +1,5 @@
 import { reactive } from 'vue';
-// import apiCall from "../services/apiCall"
-
+import api from "../services/api"
 
 const state = reactive({
     dummy: 'Hello World'
@@ -26,5 +25,5 @@ const methods = {
 export default {
     state,
     methods,
-    // apiCall
+    api
 };
