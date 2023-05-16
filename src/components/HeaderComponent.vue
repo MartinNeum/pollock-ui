@@ -12,6 +12,8 @@
       <v-icon class="create-icon" left>mdi-pencil</v-icon>
     </v-btn>
 
+    <div id="spacer"></div>
+
   </v-app-bar>
 
 </template>
@@ -28,6 +30,10 @@ function createSurvey() {
 </script>
 
 <style scoped>
+
+  #spacer {
+    margin-right: 100px;
+  }
 
   .v-app-bar {
     height: 75px;
@@ -58,14 +64,14 @@ function createSurvey() {
 
   .header-link {
     color: white;
-    margin: 15px
+    margin: 15px;
+    text-decoration: none;
   }
 
   .survey-create-button {
     text-transform: none;
     background-color: white;
     font-weight: 400;
-    margin-right: 50px;
   }
 
 </style>
