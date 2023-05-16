@@ -15,12 +15,16 @@
 <script setup>
 
   import { ref } from 'vue';
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
 
   const username = ref('');
   const password = ref('');
 
   function login() {
     console.log('Login clicked!');
+    router.push('/home')
   }
 
 </script>
