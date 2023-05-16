@@ -38,13 +38,13 @@
 
     .v-sheet {
       margin-bottom: 20px;
-      padding: 10px;
+      padding: 15px;
     }
 
     .v-sheet h2 {
       font-weight: 500;
       font-size: large;
-      padding-bottom: 10px;
+      padding-bottom: 15px;
     }
 
     h1 {

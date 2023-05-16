@@ -25,7 +25,7 @@ const router = useRouter();
 
 function createSurvey() {
   // Hier die Logik hinzufügen, um zur Umfrage-Erstellungsseite zu navigieren
-  router.push('/umfrage-erstellen');
+  router.push('/create');
 }
 </script>
 
@@ -66,6 +66,13 @@ function createSurvey() {
     color: white;
     margin: 15px;
     text-decoration: none;
+  }
+
+  #home-link {
+    color: white;
+    margin: 15px;
+    text-decoration: none;
+    width: 400px;
   }
 
   .survey-create-button {
