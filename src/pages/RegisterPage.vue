@@ -1,9 +1,7 @@
 <template>
   <div class="register">
     <h2>Registrierung</h2>
-    <v-text-field v-model="firstName" label="Vorname"></v-text-field>
-    <v-text-field v-model="lastName" label="Nachname"></v-text-field>
-    <v-text-field v-model="email" label="E-Mail"></v-text-field>
+    <v-text-field v-model="username" label="Username"></v-text-field>
     <v-text-field v-model="password" label="Passwort" type="password"></v-text-field>
     <div class="button-container">
         <v-btn @click="register" color="blue-darken-3">Registrieren</v-btn>
@@ -16,16 +14,20 @@
 
     import { ref } from 'vue';
     import { useRouter } from 'vue-router';
+    import store from "../store/index.js"
 
-    const firstName = ref('');
-    const lastName = ref('');
-    const email = ref('');
+    const username = ref('');
     const password = ref('');
 
     const router = useRouter();
 
-    function register() {
-        console.log('Register clicked!');
+    async function register() {
+        try {
+            const response = await store.api.requests.register(username.value, password.value)
+            console.log(response.status)
+        } catch (error) {
+            console.log(error)
+        }
         router.push('/');
     }
 

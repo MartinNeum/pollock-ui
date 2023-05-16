@@ -16,15 +16,24 @@
 
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
+  import store from "../store/index.js"
 
   const router = useRouter();
 
   const username = ref('');
   const password = ref('');
 
-  function login() {
-    console.log('Login clicked!');
-    router.push('/home')
+  async function login() {
+    try {
+      const response = await store.api.requests.login(username.value)
+
+      if (response.status == 200) {
+        store.methods.setUsername(username.value)
+        router.push('/home')
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
 </script>

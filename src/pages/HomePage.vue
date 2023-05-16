@@ -21,8 +21,9 @@
 <script setup>
 
     import { ref } from 'vue';
+    import store from "../store/index.js"
 
-    const username = ref('John Doe');
+    const username = ref(store.state.username);
     // const createdSurveys = ref([]);
     // const invitedSurveys = ref([]);
 

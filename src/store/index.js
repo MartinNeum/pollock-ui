@@ -2,11 +2,16 @@ import { reactive } from 'vue';
 import api from "../services/api"
 
 const state = reactive({
-    dummy: 'Hello World'
+    username: null
     // sessionKey: null,
 });
 
 const methods = {
+
+    setUsername(username) {
+        state.username = username
+    }
+
     // getName(){
     //     return state.username
     // },

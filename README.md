@@ -26,3 +26,7 @@ npm run serve
 ```
 ### Geschafft!
 Die pollock-UI ist nun unter ```localhost:8080``` erreichbar. Viel Spaß!
+
+## Browser einrichten
+Aufgrund der Same-Origin Policy können keine Requests über den herkömmlichen Browser gesendet werden. Hierzu müssen die Schritte von dieser Webseite umgesetzt werden:  
+https://alfilatov.com/posts/run-chrome-without-cors/
