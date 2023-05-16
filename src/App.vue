@@ -1,23 +1,32 @@
 <template>
   <v-app>
-    <v-main>
-      <HelloWorld/>
-    </v-main>
+
+      <HeaderComponent class="header-bar" v-if="showHeaderBar()"></HeaderComponent>
+
+      <v-main>
+        <router-view></router-view>
+      </v-main>
+
   </v-app>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
 
-export default {
-  name: 'App',
+  import HeaderComponent from "./components/HeaderComponent.vue";
+  import { useRouter } from 'vue-router';
 
-  components: {
-    HelloWorld,
-  },
+  const router = useRouter();
 
-  data: () => ({
-    //
-  }),
-}
+  function showHeaderBar() {
+    return router.currentRoute.value.fullPath != '/' && router.currentRoute.value.fullPath != '/register'
+  }
+
 </script>
+
+<style scoped>
+
+  .header-bar {
+    padding: unset;
+  }
+
+</style>
