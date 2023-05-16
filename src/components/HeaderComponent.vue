@@ -32,7 +32,7 @@ function createSurvey() {
 <style scoped>
 
   #spacer {
-    margin-right: 100px;
+    margin-right: 13.5%;
   }
 
   .v-app-bar {
@@ -53,7 +53,7 @@ function createSurvey() {
   .v-img {
     max-height: 35px;
     max-width: 35px;
-    margin-left: 100px;
+    margin-left: 13.5%;
   }
 
   .logo {

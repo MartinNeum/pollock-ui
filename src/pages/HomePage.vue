@@ -4,12 +4,12 @@
 
     <h1>Willkommen, {{ username }}!</h1>
 
-    <v-sheet elevation="1">
+    <v-sheet border>
       <h2>Meine Umfragen</h2>
       <p>Du hast noch keine Umfragen erstellt.</p>
     </v-sheet>
 
-    <v-sheet elevation="1">
+    <v-sheet border>
       <h2>Eingeladene Umfragen</h2>
       <p>Du wurdest zu keiner Umfrage eingeladen.</p>
     </v-sheet>
