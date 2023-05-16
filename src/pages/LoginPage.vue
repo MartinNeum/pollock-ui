@@ -1,6 +1,7 @@
 <template>
 
   <div class="login">
+
     <h2>Login</h2>
     <v-text-field v-model="username" label="Username"></v-text-field>
     <v-text-field v-model="password" label="Password" type="password"></v-text-field>
@@ -8,6 +9,9 @@
       <v-btn @click="login" color="blue-darken-3">Login</v-btn>
     </div>
     <p class="router-link">Noch keinen Account? <router-link to="/register">Hier registrieren!</router-link></p>
+    <v-divider></v-divider>
+    <p class="router-link">Ohne Account <router-link to="/home">fortfahren</router-link>.</p>
+
   </div>
 
 </template>
@@ -24,16 +28,20 @@
   const password = ref('');
 
   async function login() {
-    try {
-      const response = await store.api.requests.login(username.value)
-
-      if (response.status == 200) {
-        store.methods.setUsername(username.value)
-        router.push('/home')
-      }
-    } catch (error) {
-      console.log(error)
-    }
+    store.api.requests.login(username.value)
+      .then(response => {
+        if (response.status === 200) {
+          store.methods.setUsername(username.value);
+          router.push('/home');
+        } else if (response.status === 400 || response.status === 404) {
+          // showError('Falscher Username oder Passwort. Response: ' + response.status);
+        }
+      })
+      .catch(error => {
+        // showError('Falscher Username oder Passwort.');
+        store.methods.showSnackbarError('Test')
+        console.log(error);
+      });
   }
 
 </script>
@@ -66,6 +74,10 @@
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+  }
+
+  .v-divider {
+    margin: 20px
   }
 
 </style>

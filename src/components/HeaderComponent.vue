@@ -5,8 +5,6 @@
     <v-img src="../assets/logo-weiß.png"></v-img>
     <v-app-bar-title>Pollock</v-app-bar-title>
 
-    <router-link to="/oeffentliche-umfragen" class="header-link">Öffentliche Umfragen</router-link>
-
     <v-btn color="black" @click="createSurvey" class="survey-create-button">
       Erstellen
       <v-icon class="create-icon" left>mdi-pencil</v-icon>
