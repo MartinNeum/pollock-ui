@@ -7,7 +7,7 @@
 
     <v-row class="search-area" justify="center">
       <v-col cols="auto">
-        <v-text-field v-model="searchPoll" placeholder="Nach Umfrage suchen..." variant="solo"></v-text-field>
+        <v-text-field @keyup.enter="search()" v-model="searchPoll" placeholder="Nach Umfrage suchen..." variant="solo"></v-text-field>
       </v-col>
       <v-col cols="auto">
         <v-btn @click="search()" color="success" density="default" icon="mdi-magnify"></v-btn>

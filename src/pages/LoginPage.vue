@@ -39,7 +39,6 @@
       })
       .catch(error => {
         // showError('Falscher Username oder Passwort.');
-        store.methods.showSnackbarError('Test')
         console.log(error);
       });
   }
