@@ -13,12 +13,14 @@
 
             <h3>Titel*</h3>
             <v-text-field
+                v-model="title"
                 variant="outlined"
                 placeholder="Worum geht es?"
             ></v-text-field>
 
             <h3>Beschreibung</h3>
             <v-textarea
+                v-model="description"
                 variant="outlined"
                 placeholder="Hier kannst du Anweisungen oder Details hinzufügen."
                 auto-grow
@@ -34,9 +36,19 @@
                     <h2>Optionen*</h2>
                 </v-col>
                 <v-col class="text-right">
-                    <v-btn id="add-option" color="lime-lighten-2" size="small" append-icon="mdi-plus" @click="showTextField = true">Hinzufügen</v-btn>
+                    <v-btn color="lime-lighten-2" size="small" append-icon="mdi-plus" @click="showTextField = true">Hinzufügen</v-btn>
                 </v-col>
             </v-row>
+
+            <v-text-field 
+                v-model="newOption" 
+                append-icon="mdi-check" 
+                v-if="showTextField" 
+                label="Neue Option" 
+                outlined
+                @click:append="addOption"
+                @keydown.enter="addOption()">
+            </v-text-field>
 
             <v-list>
                 <v-list-item v-for="(option, index) in options" :key="index">
@@ -51,16 +63,6 @@
                 </v-list-item>
             </v-list>
 
-            <v-text-field 
-                v-model="newOption" 
-                append-icon="mdi-check" 
-                v-if="showTextField" 
-                label="Neue Option" 
-                outlined
-                @click:append="addOption"
-                @keydown.enter="addOption()">
-            </v-text-field>
-
             <p v-if="options.length === 0">Keine Optionen erstellt.</p>
         </v-form>
     </v-sheet>
@@ -68,9 +70,34 @@
     <!-- Personen -->
     <v-sheet border>
         <v-form>
-            <h2>Personen</h2>
+            <v-row>
+                <v-col cols="auto">
+                    <h2>Personen</h2>
+                </v-col>
+                <v-col class="text-right">
+                    <v-btn color="lime-lighten-2" size="small" append-icon="mdi-plus" @click="showPersonTextField = true">Hinzufügen</v-btn>
+                </v-col>
+            </v-row>
 
-            <p>Keine Personen verfügbar.</p>
+            <v-text-field 
+                v-model="newPerson" 
+                append-icon="mdi-check" 
+                v-if="showPersonTextField" 
+                label="Neue Person" 
+                outlined
+                @click:append="addPerson()"
+                @keydown.enter="addPerson()">
+            </v-text-field>
+
+            <v-row>
+                <div v-for="(person, index) in persons" :key="index">
+                    <v-col>
+                        <v-chip color="indigo" text-color="white" size="large" closable @click:close="deletePerson(index)">{{ person }}</v-chip>
+                    </v-col>
+                </div>
+            </v-row>
+
+            <p v-if="persons.length === 0">Keine Personen hinzugefügt.</p>
         </v-form>
     </v-sheet>
 
@@ -78,7 +105,7 @@
     <v-sheet border>
         <v-form>
             <h2>Einstellungen</h2>
-            <v-checkbox color="blue-darken-3" hide-details label="Öffentlich"></v-checkbox>
+            <v-checkbox v-model="publicPoll" color="blue-darken-3" hide-details label="Öffentlich"></v-checkbox>
             <v-checkbox color="blue-darken-3" hide-details label="Frist festlegen"></v-checkbox>
         </v-form>
     </v-sheet>
@@ -101,9 +128,17 @@
 
     import { ref } from 'vue';
 
+    const title = ref('')
+    const description = ref('')
+    const publicPoll = ref(false)
+
     const options = ref([]);
     const newOption = ref('');
     const showTextField = ref(false);
+
+    const persons = ref([]);
+    const newPerson = ref('');
+    const showPersonTextField = ref(false);
 
     function addOption() {
         if (newOption.value.trim() !== '') {
@@ -113,8 +148,21 @@
         }
     }
 
+    function addPerson() {
+        if (newPerson.value.trim() !== '') {
+            persons.value.push(newPerson.value.trim());
+            newPerson.value = '';
+            showPersonTextField.value = false;
+        }
+    }
+
     const deleteOption = (index) => {
         options.value.splice(index, 1);
+    };
+
+    const deletePerson = (index) => {
+        // TODO: Fix multiple Deletions
+        persons.value = persons.value.splice(index, 1);
     };
 
 </script>
@@ -153,10 +201,6 @@
         text-align: left;
         margin: 20px 0 20px 0;
         font-weight: 400;
-    }
-
-    #add-option {
-
     }
 
 </style>
