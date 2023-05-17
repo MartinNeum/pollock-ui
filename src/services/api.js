@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from 'axios'
 
 const requests = {
@@ -13,6 +14,27 @@ const requests = {
 
     login(username){
       const response = axios.get('http://127.0.0.1:3000/user/' + username)
+      return response;
+    },
+
+    createPoll(title, description, options, setting, fixed, owner, users, visibility) {
+      const response = axios.post('http://127.0.0.1:3000/poll/lack/', {
+        title: title,
+        description: description,
+        options: options,
+        setting: setting,
+        fixed: fixed
+      })
+      // const response = axios.post('http://127.0.0.1:3000/poll/lock/', {
+      //   title: title,
+      //   description: description,
+      //   options: options,
+      //   setting: setting,
+      //   fixed: fixed,
+      //   owner: owner,
+      //   users: users,
+      //   visibility: visibility
+      // })
       return response;
     },
 

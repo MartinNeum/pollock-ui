@@ -36,16 +36,13 @@
   async function search() {
     store.api.requests.getPollByToken(searchPoll.value)
       .then(response => {
-      if (response.status === 200) {
-        router.push('/poll/' + searchPoll.value);
-      } else if (response.status === 400 || response.status === 404) {
-        // showError('Falscher Username oder Passwort. Response: ' + response.status);
-      }
-    })
-    .catch(error => {
-      // showError('Falscher Username oder Passwort.');
-      console.log(error);
-    });
+        if (response.status === 200) {
+          router.push('/poll/' + searchPoll.value);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
 

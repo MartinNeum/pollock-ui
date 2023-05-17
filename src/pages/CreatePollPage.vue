@@ -33,7 +33,7 @@
         <v-form>
             <v-row>
                 <v-col cols="auto">
-                    <h2>Optionen*</h2>
+                    <h2>Optionen (min. 2)*</h2>
                 </v-col>
                 <v-col class="text-right">
                     <v-btn color="lime-lighten-2" size="small" append-icon="mdi-plus" @click="showTextField = true">Hinzufügen</v-btn>
@@ -124,7 +124,7 @@
             <v-btn type="cancel" color="blue-grey-lighten-4" @click="router.push('/home')">Abbrechen</v-btn>
         </v-col>
         <v-col cols="auto">
-            <v-btn type="submit" color="success">Umfrage erstellen</v-btn>
+            <v-btn type="submit" color="success" @click="create()">Umfrage erstellen</v-btn>
         </v-col>
     </v-row>
 
@@ -137,6 +137,7 @@
     import { ref } from 'vue';
     import { useRouter } from 'vue-router';
     import VueDatePicker from '@vuepic/vue-datepicker';
+    import store from "../store/index.js"
     import '@vuepic/vue-datepicker/dist/main.css'
 
     const title = ref('')
@@ -177,6 +178,29 @@
         // TODO: Fix multiple Deletions
         persons.value = persons.value.splice(index, 1);
     };
+
+    async function create() {
+
+        const setting = { "voices": 1, "worst": false, "deadline": date.value }
+        const fixed = [0]
+        const owner = {"name": store.state.username, "lock": true}
+        let visibility = "lock";
+        if (publicPoll.value) {
+            visibility = "lack";
+        }
+        const optionsDic = options.value.map((text, id) => ({ id, text }));
+        const personsDic = persons.value.map((name) => ({ name, "lock": false}));
+
+        store.api.requests.createPoll(title.value, description.value, optionsDic, setting, fixed, owner, personsDic, visibility)
+            .then(response => {
+                if (response.status === 200) {
+                    console.log(response.data)
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 
 </script>
 
