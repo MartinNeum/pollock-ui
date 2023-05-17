@@ -106,14 +106,22 @@
         <v-form>
             <h2>Einstellungen</h2>
             <v-checkbox v-model="publicPoll" color="blue-darken-3" hide-details label="Öffentlich"></v-checkbox>
-            <v-checkbox color="blue-darken-3" hide-details label="Frist festlegen"></v-checkbox>
+            <v-checkbox v-model="setDeadline" color="blue-darken-3" label="Frist festlegen"></v-checkbox>
+
+            <div v-if="setDeadline">
+                <h3>Datum auswählen</h3>
+                <VueDatePicker 
+                    v-model="date"
+                    class="datepicker"
+                ></VueDatePicker>
+            </div>
         </v-form>
     </v-sheet>
 
     <!-- Buttons -->
     <v-row class="button-row" justify="end">
         <v-col cols="auto">
-            <v-btn type="cancel" color="blue-grey-lighten-4">Abbrechen</v-btn>
+            <v-btn type="cancel" color="blue-grey-lighten-4" @click="router.push('/home')">Abbrechen</v-btn>
         </v-col>
         <v-col cols="auto">
             <v-btn type="submit" color="success">Umfrage erstellen</v-btn>
@@ -127,16 +135,21 @@
 <script setup>
 
     import { ref } from 'vue';
+    import { useRouter } from 'vue-router';
+    import VueDatePicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css'
 
     const title = ref('')
     const description = ref('')
     const publicPoll = ref(false)
-
     const options = ref([]);
+    const persons = ref([]);
+    const date = ref();
+
+    const router = useRouter();
+    const setDeadline = ref(false)
     const newOption = ref('');
     const showTextField = ref(false);
-
-    const persons = ref([]);
     const newPerson = ref('');
     const showPersonTextField = ref(false);
 
@@ -187,7 +200,7 @@
     }
 
     .v-form h3 {
-        font-weight: 400;
+        font-weight: 500;
         font-size: medium;
         padding-bottom: 5px;
     }
@@ -201,6 +214,12 @@
         text-align: left;
         margin: 20px 0 20px 0;
         font-weight: 400;
+    }
+
+    .datepicker {
+        width: 80%;
+        z-index: 1;
+        position: relative;
     }
 
 </style>
