@@ -29,14 +29,14 @@
 
       <div v-if="store.state.polls.length > 0">
         <div v-for="(poll, index) in store.state.polls" :key="index">
-          <v-card width="200" variant="outlined">
-            <!-- <v-card-item>
-                <v-card-title>poll.</v-card-title>
-                <v-card-subtitle>This is a subtitle</v-card-subtitle>
-            </v-card-item> -->
-
-            <v-card-text>{{ poll.share }}</v-card-text>
-            <v-card-text>{{ poll.admin }}</v-card-text>
+          <v-card width="300" variant="outlined">
+            <v-card-title>{{ poll.title }}</v-card-title>
+            <p>{{ poll.date }}</p>
+            <v-card-subtitle>{{ poll.description }}</v-card-subtitle>
+            <v-card-text>
+              <p>Share: {{ poll.share }}</p>
+              <p>Admin: {{ poll.admin }}</p>
+            </v-card-text>
           </v-card>
         </div>
       </div>

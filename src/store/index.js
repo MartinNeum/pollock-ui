@@ -18,7 +18,7 @@ const methods = {
     },
 
     addPoll(poll) {
-        state.polls.push({"share": poll.share, "admin": poll.admin})
+        state.polls.push({"title": poll.title, "description": poll.description, "date": poll.deadline, "share": poll.share, "admin": poll.admin})
     }
 
     // getName(){

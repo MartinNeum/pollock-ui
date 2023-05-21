@@ -236,7 +236,7 @@
                     console.log(response.data)
                     shareToken.value = response.data.share.value
                     adminToken.value = response.data.admin.value
-                    store.methods.addPoll({"share": response.data.share.value, "admin": response.data.admin.value})
+                    store.methods.addPoll({"title": title.value, "description": description.value, "date": setting.deadline.value, "share": response.data.share.value, "admin": response.data.admin.value})
                     dialog.value = true
                 }
             })
