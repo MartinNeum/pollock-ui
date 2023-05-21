@@ -236,9 +236,9 @@
                     console.log(response.data)
                     shareToken.value = response.data.share.value
                     adminToken.value = response.data.admin.value
+                    store.methods.addPoll({"share": response.data.share.value, "admin": response.data.admin.value})
+                    dialog.value = true
                 }
-                dialog.value = true
-                // router.push('/home')
             })
             .catch(error => {
                 console.log(error);

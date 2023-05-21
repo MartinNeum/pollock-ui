@@ -2,14 +2,18 @@ import { reactive } from 'vue';
 import api from "../services/api"
 
 const state = reactive({
-    username: null
-    // sessionKey: null,
+    username: null,
+    polls: []
 });
 
 const methods = {
 
     setUsername(username) {
         state.username = username
+    },
+
+    addPoll(poll) {
+        state.polls.push({"share": poll.share, "admin": poll.admin})
     }
 
     // getName(){
