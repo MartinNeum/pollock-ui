@@ -50,8 +50,8 @@
           <v-text-field
             v-model="editToken"
             readonly
-            :append-icon="shareTokenCopied ? 'mdi-check' : 'mdi-content-copy'"
-            @click:append="copyShareToken"
+            :append-icon="editTokenCopied ? 'mdi-check' : 'mdi-content-copy'"
+            @click:append="copyEditToken"
             variant="outlined"
           ></v-text-field>
         </v-container>
@@ -81,7 +81,7 @@
   const voices = ref()
   const checkedItems = ref(new Array(options.value.length).fill(false));
   const editToken = ref()
-  const shareTokenCopied = ref(false)
+  let editTokenCopied = ref(false)
   const dialog = ref(false)
 
   onMounted(() => {
@@ -142,6 +142,15 @@
         console.log(error)
       })
   }
+
+  const copyEditToken = () => {
+    navigator.clipboard.writeText(editToken.value)
+      .then(function() {
+        editTokenCopied.value = true
+        setTimeout(function() {editTokenCopied.value = false;}, 2000);
+        // Erfolgreich kopiert
+      })
+  };
 
 </script>
 

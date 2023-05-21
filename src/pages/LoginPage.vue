@@ -5,6 +5,7 @@
     <h2>Login</h2>
     <v-text-field v-model="username" label="Username"></v-text-field>
     <v-text-field v-model="password" label="Password" type="password"></v-text-field>
+    <v-text-field v-model="apiKey" label="API Key" type="text"></v-text-field>
     <div class="button-container">
       <v-btn @click="login" color="blue-darken-3">Login</v-btn>
     </div>
@@ -26,9 +27,10 @@
 
   const username = ref('');
   const password = ref('');
+  const apiKey = ref('')
 
   async function login() {
-    store.api.requests.login(username.value, store.state.apiKey)
+    store.api.requests.login(username.value, apiKey.value)
       .then(response => {
         if (response.status === 200) {
           store.methods.setUsername(username.value);
