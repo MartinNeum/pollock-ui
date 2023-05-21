@@ -7,7 +7,13 @@
 
     <div class="search-container">
       <div class="search-field">
-        <v-text-field @keydown.enter="search()" v-model="searchPoll" placeholder="Nach Umfrage suchen..." variant="solo"></v-text-field>
+        <v-text-field 
+          v-model="searchPoll" 
+          @keydown.enter="search()" 
+          placeholder="Nach Umfrage suchen..." 
+          variant="solo"
+          autofocus
+        ></v-text-field>
       </div>
 
       <div class="search-button">
