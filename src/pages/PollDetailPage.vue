@@ -77,6 +77,7 @@
         v-model="adminToken"
         variant="outlined"
         class="adminToken"
+        label="Admin Token"
       ></v-text-field>
 
       <v-card-actions>

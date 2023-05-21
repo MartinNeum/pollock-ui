@@ -11,9 +11,33 @@
     </div>
     <p class="router-link">Noch keinen Account? <router-link to="/register">Hier registrieren!</router-link></p>
     <v-divider></v-divider>
-    <p class="router-link">Ohne Account <router-link to="/home">fortfahren</router-link>.</p>
+    <!-- <p class="router-link">Ohne Account <router-link to="/home">fortfahren</router-link>.</p> -->
+    <div class="button-container">
+      <v-btn size="small" @click="handleNoAccount">Ohne Account fortfahren</v-btn>
+    </div>
 
   </div>
+
+  <!-- Dialog Ohne Account -->
+  <v-dialog v-model="dialog" width="50%">
+    <v-card>
+      <v-card-text>
+        <h1>Hallo Gast!</h1>
+        <p>Bitte gib deinen Namen ein:</p>
+      </v-card-text>
+
+      <v-text-field
+        v-model="guestName"
+        variant="outlined"
+        class="dialog"
+        placeholder="Wie möchtest du genannt werden?"
+      ></v-text-field>
+
+      <v-card-actions>
+        <v-btn color="success" block @click="continueWithoutAccount">Los geht's!</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 
 </template>
 
@@ -28,6 +52,8 @@
   const username = ref('');
   const password = ref('');
   const apiKey = ref('')
+  const dialog = ref()
+  const guestName = ref()
 
   async function login() {
     store.api.requests.login(username.value, apiKey.value)
@@ -43,6 +69,15 @@
         // showError('Falscher Username oder Passwort.');
         console.log(error);
       });
+  }
+
+  function handleNoAccount() {
+    dialog.value = true
+  }
+
+  function continueWithoutAccount() {
+    store.methods.setUsername(guestName.value)
+    router.push('/home')
   }
 
 </script>
@@ -79,6 +114,11 @@
 
   .v-divider {
     margin: 20px
+  }
+
+  .dialog {
+    max-width: 90%;
+    margin-left: 20px;
   }
 
 </style>
