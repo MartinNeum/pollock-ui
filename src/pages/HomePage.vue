@@ -5,14 +5,18 @@
     <h1 v-if="username">Willkommen, {{ username }}!</h1>
     <h1 v-else>Willkommen, Gast!</h1>
 
-    <v-row class="search-area" justify="center">
-      <v-col cols="auto">
+    <div class="search-container">
+      <div class="search-field">
         <v-text-field @keydown.enter="search()" v-model="searchPoll" placeholder="Nach Umfrage suchen..." variant="solo"></v-text-field>
-      </v-col>
-      <v-col cols="auto">
-        <v-btn @click="search()" color="success" density="default" icon="mdi-magnify"></v-btn>
-      </v-col>
-    </v-row>
+      </div>
+
+      <div class="search-button">
+        <v-btn color="success" @click="search()">
+          Suchen
+          <v-icon center>mdi-magnify</v-icon>
+        </v-btn>
+      </div>
+    </div>
 
     <v-sheet border>
       <h2>Meine Umfragen</h2>
@@ -45,8 +49,6 @@
       });
   }
 
-
-
 </script>
 
 <style scoped>
@@ -74,12 +76,22 @@
     font-weight: 400;
   }
 
-  .v-text-field {
-    width: 750PX;
+  .search-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
-  .search-area {
-    margin: 40px
+  .search-field {
+    width: 80%;
+  }
+
+  .search-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
   }
 
 </style>
