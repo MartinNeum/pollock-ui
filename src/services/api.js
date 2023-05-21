@@ -44,6 +44,17 @@ const requests = {
       return response;
     },
 
+    updatePoll(adminToken, title, description, options, setting, fixed, owner, users, visibility) {
+      const response = axios.put('http://127.0.0.1:3000/poll/lack/' + adminToken, {
+        title: title,
+        description: description,
+        options: options,
+        setting: setting,
+        fixed: fixed
+      })
+      return response;
+    },
+
     getPollByToken(token){
       // const response = axios.get('http://127.0.0.1:3000/poll/lock/' + token)
       const response = axios.get('http://127.0.0.1:3000/poll/lack/' + token)

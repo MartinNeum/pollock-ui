@@ -7,7 +7,7 @@
 
     <v-btn color="black" @click="createSurvey" class="survey-create-button">
       Erstellen
-      <v-icon class="create-icon" left>mdi-pencil</v-icon>
+      <v-icon class="create-icon" left>mdi-folder-plus-outline</v-icon>
     </v-btn>
 
     <div id="spacer"></div>

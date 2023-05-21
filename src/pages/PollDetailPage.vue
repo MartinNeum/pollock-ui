@@ -5,7 +5,10 @@
     <router-link to="/home" class="back-link">Zurück</router-link>
 
     <v-sheet border>
-      <h1>{{ title }}</h1>
+      <div class="title-row">
+        <h1>{{ title }}</h1>
+        <v-btn size="small" density="default" icon="mdi-pencil" @click="edit()"></v-btn>
+      </div>
 
       <div v-if="deadline" class="date-info">
         <v-icon size="x-small" icon="mdi-calendar-range"></v-icon>
@@ -37,28 +40,48 @@
 
   </div>
 
-    <!-- Dialog -->
-    <v-dialog v-model="dialog" width="auto" persistent>
-      <v-card>
-        <v-card-text>
-          <h1>Glückwunsch!</h1>
-          <p>Deine Abstimmung wurde erfolgreich abgegeben!</p>
-          <p class="hint"><strong>Hinweis:</strong> Bitte stelle sicher, den Edit-Token zu speichern. Du wirst ihn nicht erneut abrufen können.</p>
-        </v-card-text>
+  <!-- Dialog Create -->
+  <v-dialog v-model="dialog" width="auto" persistent>
+    <v-card>
+      <v-card-text>
+        <h1>Glückwunsch!</h1>
+        <p>Deine Abstimmung wurde erfolgreich abgegeben.</p>
+        <p class="hint"><strong>Hinweis:</strong> Bitte stelle sicher, den Edit-Token zu speichern. Du wirst ihn nicht erneut abrufen können.</p>
+      </v-card-text>
 
-        <v-container>
-          <v-text-field
-            v-model="editToken"
-            readonly
-            :append-icon="editTokenCopied ? 'mdi-check' : 'mdi-content-copy'"
-            @click:append="copyEditToken"
-            variant="outlined"
-          ></v-text-field>
-        </v-container>
+      <v-container>
+        <v-text-field
+          v-model="editToken"
+          readonly
+          :append-icon="editTokenCopied ? 'mdi-check' : 'mdi-content-copy'"
+          @click:append="copyEditToken"
+          variant="outlined"
+        ></v-text-field>
+      </v-container>
 
-        <v-card-actions>
-            <v-btn color="success" block @click="router.push('/home')">Weiter</v-btn>
-        </v-card-actions>
+      <v-card-actions>
+          <v-btn color="success" block @click="router.push('/home')">Weiter</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <!-- Dialog Edit -->
+  <v-dialog v-model="dialogEdit" width="auto">
+    <v-card>
+      <v-card-text>
+        <h1>Admin Token benötigt</h1>
+        <p>Bitte gib deinen Admin Token zum bearbeiten ein:</p>
+      </v-card-text>
+
+      <v-text-field
+        v-model="adminToken"
+        variant="outlined"
+        class="adminToken"
+      ></v-text-field>
+
+      <v-card-actions>
+        <v-btn color="success" block @click="continueToEdit()">Weiter zur Bearbeitung</v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 
@@ -83,6 +106,8 @@
   const editToken = ref()
   let editTokenCopied = ref(false)
   const dialog = ref(false)
+  const dialogEdit = ref(false)
+  const adminToken = ref()
 
   onMounted(() => {
     getPollDetails();
@@ -152,6 +177,17 @@
       })
   };
 
+  function edit() {
+    dialogEdit.value = true
+  }
+
+  function continueToEdit() {
+    if(adminToken.value != null) {
+      store.methods.setAdminToken(adminToken.value)
+      router.push('/poll/' + route.params.token + '/edit')
+    }
+  }
+
 </script>
 
 <style scoped>
@@ -192,6 +228,17 @@
 
   .date-info .v-icon {
     margin-right: 5px;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .adminToken {
+    max-width: 90%;
+    margin-left: 20px;
   }
 
 </style>

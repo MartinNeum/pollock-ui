@@ -4,6 +4,7 @@ import api from "../services/api"
 const state = reactive({
     username: null,
     apiKey: null,
+    adminToken: null,
     polls: []
 });
 
@@ -17,23 +18,13 @@ const methods = {
         state.apiKey = key
     },
 
+    setAdminToken(token) {
+        state.adminToken = token
+    },
+
     addPoll(poll) {
         state.polls.push({"title": poll.title, "description": poll.description, "date": poll.deadline, "share": poll.share, "admin": poll.admin})
     }
-
-    // getName(){
-    //     return state.username
-    // },
-    // async userIsLoggedIn(){
-    //     const response = await apiCall.requests.checkSession(state.sessionKey)
-    //     if(response.status == 200){
-    //         if(response.data['Succuess'] != false){
-    //             return true;
-    //         } else {
-    //             return false;
-    //         }
-    //     }
-    // }
 }
 
 export default {
