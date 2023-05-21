@@ -16,6 +16,7 @@
                 v-model="title"
                 variant="outlined"
                 placeholder="Worum geht es?"
+                autofocus
             ></v-text-field>
 
             <h3>Beschreibung</h3>
@@ -46,9 +47,10 @@
                 v-if="showTextField" 
                 label="Neue Option" 
                 outlined
+                autofocus
                 @click:append="addOption"
-                @keydown.enter="addOption()">
-            </v-text-field>
+                @keydown.enter="addOption()"
+            ></v-text-field>
 
             <v-list>
                 <v-list-item v-for="(option, index) in options" :key="index">
@@ -85,6 +87,7 @@
                 v-if="showPersonTextField" 
                 label="Neue Person" 
                 outlined
+                autofocus
                 @click:append="addPerson()"
                 @keydown.enter="addPerson()">
             </v-text-field>
@@ -196,6 +199,7 @@
                 if (response.status === 200) {
                     console.log(response.data)
                 }
+                router.push('/home')
             })
             .catch(error => {
                 console.log(error);
