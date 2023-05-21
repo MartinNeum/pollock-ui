@@ -1,137 +1,169 @@
 <template>
 
-  <div class="create">
+    <div class="create">
 
-    <router-link to="/home" class="back-link">Zurück</router-link>
+        <router-link to="/home" class="back-link">Zurück</router-link>
 
-    <h1>Umfrage erstellen</h1>
+        <h1>Umfrage erstellen</h1>
 
-    <!-- Allgemeine Infos -->
-    <v-sheet border>
-        <v-form>
-            <h2>Allgemeine Informationen</h2>
+        <!-- Allgemeine Infos -->
+        <v-sheet border>
+            <v-form>
+                <h2>Allgemeine Informationen</h2>
 
-            <h3>Titel*</h3>
-            <v-text-field
-                v-model="title"
-                variant="outlined"
-                placeholder="Worum geht es?"
-                autofocus
-            ></v-text-field>
+                <h3>Titel*</h3>
+                <v-text-field
+                    v-model="title"
+                    variant="outlined"
+                    placeholder="Worum geht es?"
+                    autofocus
+                ></v-text-field>
 
-            <h3>Beschreibung</h3>
-            <v-textarea
-                v-model="description"
-                variant="outlined"
-                placeholder="Hier kannst du Anweisungen oder Details hinzufügen."
-                auto-grow
-            ></v-textarea>
-        </v-form>
-    </v-sheet>
+                <h3>Beschreibung</h3>
+                <v-textarea
+                    v-model="description"
+                    variant="outlined"
+                    placeholder="Hier kannst du Anweisungen oder Details hinzufügen."
+                    auto-grow
+                ></v-textarea>
+            </v-form>
+        </v-sheet>
 
-    <!-- Optionen -->
-    <v-sheet border>
-        <v-form>
-            <v-row>
-                <v-col cols="auto">
-                    <h2>Optionen (min. 2)*</h2>
-                </v-col>
-                <v-col class="text-right">
-                    <v-btn color="lime-lighten-2" size="small" append-icon="mdi-plus" @click="showTextField = true">Hinzufügen</v-btn>
-                </v-col>
-            </v-row>
-
-            <v-text-field 
-                v-model="newOption" 
-                append-icon="mdi-check" 
-                v-if="showTextField" 
-                label="Neue Option" 
-                outlined
-                autofocus
-                @click:append="addOption"
-                @keydown.enter="addOption()"
-            ></v-text-field>
-
-            <v-list>
-                <v-list-item v-for="(option, index) in options" :key="index">
-                    <v-row>
-                        <v-col cols="auto">
-                            <v-list-item-content>{{ option }}</v-list-item-content>
-                        </v-col>
-                        <v-col class="text-right">
-                            <v-icon @click="deleteOption(index)">mdi-close</v-icon>
-                        </v-col>
-                    </v-row>
-                </v-list-item>
-            </v-list>
-
-            <p v-if="options.length === 0">Keine Optionen erstellt.</p>
-        </v-form>
-    </v-sheet>
-
-    <!-- Personen -->
-    <v-sheet border>
-        <v-form>
-            <v-row>
-                <v-col cols="auto">
-                    <h2>Personen</h2>
-                </v-col>
-                <v-col class="text-right">
-                    <v-btn color="lime-lighten-2" size="small" append-icon="mdi-plus" @click="showPersonTextField = true">Hinzufügen</v-btn>
-                </v-col>
-            </v-row>
-
-            <v-text-field 
-                v-model="newPerson" 
-                append-icon="mdi-check" 
-                v-if="showPersonTextField" 
-                label="Neue Person" 
-                outlined
-                autofocus
-                @click:append="addPerson()"
-                @keydown.enter="addPerson()">
-            </v-text-field>
-
-            <v-row>
-                <div v-for="(person, index) in persons" :key="index">
-                    <v-col>
-                        <v-chip color="indigo" text-color="white" size="large" closable @click:close="deletePerson(index)">{{ person }}</v-chip>
+        <!-- Optionen -->
+        <v-sheet border>
+            <v-form>
+                <v-row>
+                    <v-col cols="auto">
+                        <h2>Optionen (min. 2)*</h2>
                     </v-col>
+                    <v-col class="text-right">
+                        <v-btn color="lime-lighten-2" size="small" append-icon="mdi-plus" @click="showTextField = true">Hinzufügen</v-btn>
+                    </v-col>
+                </v-row>
+
+                <v-text-field 
+                    v-model="newOption" 
+                    append-icon="mdi-check" 
+                    v-if="showTextField" 
+                    label="Neue Option" 
+                    outlined
+                    autofocus
+                    @click:append="addOption"
+                    @keydown.enter="addOption()"
+                ></v-text-field>
+
+                <v-list>
+                    <v-list-item v-for="(option, index) in options" :key="index">
+                        <v-row>
+                            <v-col cols="auto">
+                                <v-list-item-content>{{ option }}</v-list-item-content>
+                            </v-col>
+                            <v-col class="text-right">
+                                <v-icon @click="deleteOption(index)">mdi-close</v-icon>
+                            </v-col>
+                        </v-row>
+                    </v-list-item>
+                </v-list>
+
+                <p v-if="options.length === 0">Keine Optionen erstellt.</p>
+            </v-form>
+        </v-sheet>
+
+        <!-- Personen -->
+        <v-sheet border>
+            <v-form>
+                <v-row>
+                    <v-col cols="auto">
+                        <h2>Personen</h2>
+                    </v-col>
+                    <v-col class="text-right">
+                        <v-btn color="lime-lighten-2" size="small" append-icon="mdi-plus" @click="showPersonTextField = true">Hinzufügen</v-btn>
+                    </v-col>
+                </v-row>
+
+                <v-text-field 
+                    v-model="newPerson" 
+                    append-icon="mdi-check" 
+                    v-if="showPersonTextField" 
+                    label="Neue Person" 
+                    outlined
+                    autofocus
+                    @click:append="addPerson()"
+                    @keydown.enter="addPerson()">
+                </v-text-field>
+
+                <v-row>
+                    <div v-for="(person, index) in persons" :key="index">
+                        <v-col>
+                            <v-chip color="indigo" text-color="white" size="large" closable @click:close="deletePerson(index)">{{ person }}</v-chip>
+                        </v-col>
+                    </div>
+                </v-row>
+
+                <p v-if="persons.length === 0">Keine Personen hinzugefügt.</p>
+            </v-form>
+        </v-sheet>
+
+        <!-- Einstellungen -->
+        <v-sheet border>
+            <v-form>
+                <h2>Einstellungen</h2>
+                <v-checkbox v-model="publicPoll" color="blue-darken-3" hide-details label="Öffentlich"></v-checkbox>
+                <v-checkbox v-model="setDeadline" color="blue-darken-3" label="Frist festlegen"></v-checkbox>
+
+                <div v-if="setDeadline">
+                    <h3>Datum auswählen</h3>
+                    <VueDatePicker 
+                        v-model="date"
+                        class="datepicker"
+                    ></VueDatePicker>
                 </div>
-            </v-row>
+            </v-form>
+        </v-sheet>
 
-            <p v-if="persons.length === 0">Keine Personen hinzugefügt.</p>
-        </v-form>
-    </v-sheet>
+        <!-- Buttons -->
+        <v-row class="button-row" justify="end">
+            <v-col cols="auto">
+                <v-btn type="cancel" color="blue-grey-lighten-4" @click="router.push('/home')">Abbrechen</v-btn>
+            </v-col>
+            <v-col cols="auto">
+                <v-btn type="submit" color="success" @click="create()">Umfrage erstellen</v-btn>
+            </v-col>
+        </v-row>
 
-    <!-- Einstellungen -->
-    <v-sheet border>
-        <v-form>
-            <h2>Einstellungen</h2>
-            <v-checkbox v-model="publicPoll" color="blue-darken-3" hide-details label="Öffentlich"></v-checkbox>
-            <v-checkbox v-model="setDeadline" color="blue-darken-3" label="Frist festlegen"></v-checkbox>
+    </div>
 
-            <div v-if="setDeadline">
-                <h3>Datum auswählen</h3>
-                <VueDatePicker 
-                    v-model="date"
-                    class="datepicker"
-                ></VueDatePicker>
-            </div>
-        </v-form>
-    </v-sheet>
+    <!-- Dialog -->
+    <v-dialog v-model="dialog" width="auto">
+        <v-card>
+            <v-card-text>
+                <h1>Glückwunsch!</h1>
+                <p>Die Umfrage wurde erfolgreich erstellt!</p>
+                <p class="hint"><strong>Hinweis:</strong> Bitte stelle sicher, die Tokens zu speichern. Du wirst sie nicht erneut abrufen können.</p>
+            </v-card-text>
 
-    <!-- Buttons -->
-    <v-row class="button-row" justify="end">
-        <v-col cols="auto">
-            <v-btn type="cancel" color="blue-grey-lighten-4" @click="router.push('/home')">Abbrechen</v-btn>
-        </v-col>
-        <v-col cols="auto">
-            <v-btn type="submit" color="success" @click="create()">Umfrage erstellen</v-btn>
-        </v-col>
-    </v-row>
+            <v-container>
+                <v-text-field
+                    v-model="shareToken"
+                    readonly
+                    :append-icon="shareTokenCopied ? 'mdi-check' : 'mdi-content-copy'"
+                    @click:append="copyShareToken"
+                    variant="outlined"
+                ></v-text-field>
+                <v-text-field
+                    v-model="adminToken"
+                    readonly
+                    :append-icon="adminTokenCopied ? 'mdi-check' : 'mdi-content-copy'"
+                    @click:append="copyAdminToken"
+                    variant="outlined"
+                ></v-text-field>
+            </v-container>
 
-  </div>
+            <v-card-actions>
+                <v-btn color="success" block @click="goBack">Weiter</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
   
 </template>
 
@@ -143,19 +175,23 @@
     import store from "../store/index.js"
     import '@vuepic/vue-datepicker/dist/main.css'
 
+    const shareToken = ref();
+    const adminToken = ref();
     const title = ref('')
     const description = ref('')
     const publicPoll = ref(false)
     const options = ref([]);
     const persons = ref([]);
     const date = ref();
-
+    const dialog = ref(false)
     const router = useRouter();
     const setDeadline = ref(false)
     const newOption = ref('');
     const showTextField = ref(false);
     const newPerson = ref('');
     const showPersonTextField = ref(false);
+    let shareTokenCopied = ref(false)
+    let adminTokenCopied = ref(false)
 
     function addOption() {
         if (newOption.value.trim() !== '') {
@@ -198,13 +234,39 @@
             .then(response => {
                 if (response.status === 200) {
                     console.log(response.data)
+                    shareToken.value = response.data.share.value
+                    adminToken.value = response.data.admin.value
                 }
-                router.push('/home')
+                dialog.value = true
+                // router.push('/home')
             })
             .catch(error => {
                 console.log(error);
             });
     }
+
+    const copyShareToken = () => {
+        navigator.clipboard.writeText(shareToken.value)
+            .then(function() {
+                shareTokenCopied.value = true
+                setTimeout(function() {shareTokenCopied.value = false;}, 2000);
+                // Erfolgreich kopiert
+            })
+    };
+
+    const copyAdminToken = () => {
+        navigator.clipboard.writeText(adminToken.value)
+            .then(function() {
+                adminTokenCopied.value = true
+                setTimeout(function() {adminTokenCopied.value = false;}, 2000);
+                // Erfolgreich kopiert
+            })
+    };
+
+    const goBack = () => {
+        dialog.value = false 
+        router.push('/home') 
+    };
 
 </script>
 
@@ -248,6 +310,10 @@
         width: 80%;
         z-index: 1;
         position: relative;
+    }
+
+    .hint {
+        margin-top: 5px;
     }
 
 </style>
