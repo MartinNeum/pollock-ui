@@ -15,7 +15,9 @@
 
       <h2>Beschreibung</h2>
       <p>{{ description }}</p>
+    </v-sheet>
 
+    <v-sheet border>
       <h2>Optionen</h2>
       <v-form>
         <v-list>
@@ -24,7 +26,6 @@
           </v-list-item>
         </v-list>
       </v-form>
-
     </v-sheet>
 
   </div>
@@ -55,9 +56,18 @@
             title.value = response.data.poll.body.title
             description.value = response.data.poll.body.description
 
-            // Datum lesen
+            // Datum lesen, Füge führende Nullen hinzu
             let date = new Date(response.data.poll.body.setting.deadline)
-            deadline.value = date.getDate() + "." + date.getMonth() + "." + date.getFullYear()
+
+            let day = date.getDate();
+            let month = date.getMonth() + 1;
+            let year = date.getFullYear();
+            day = day < 10 ? "0" + day : day;
+            month = month < 10 ? "0" + month : month;
+            year = year < 10 ? "0" + year : year;
+
+            deadline.value = day + "." + month + "." + year
+            
             options.value = response.data.poll.body.options.map(option => option.text)
           }
         })
@@ -94,7 +104,7 @@
   h2 {
     font-weight: 500;
     font-size: large;
-    padding: 15px 0 15px 0;
+    padding: 5px 0 15px 0;
   }
 
   .date-info {
