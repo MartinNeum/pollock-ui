@@ -134,7 +134,7 @@
     </div>
 
     <!-- Dialog -->
-    <v-dialog v-model="dialog" width="auto">
+    <v-dialog v-model="dialog" width="auto" persistent>
         <v-card>
             <v-card-text>
                 <h1>Glückwunsch!</h1>
