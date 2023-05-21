@@ -28,7 +28,7 @@
   const password = ref('');
 
   async function login() {
-    store.api.requests.login(username.value)
+    store.api.requests.login(username.value, store.state.apiKey)
       .then(response => {
         if (response.status === 200) {
           store.methods.setUsername(username.value);

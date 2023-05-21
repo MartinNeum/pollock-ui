@@ -12,8 +12,14 @@ const requests = {
       return response;
     },
 
-    login(username){
-      const response = axios.get('http://127.0.0.1:3000/user/' + username)
+    login(username, apikey){
+      const config = {
+        headers: {
+          'API-KEY': apikey
+        }
+      }
+
+      const response = axios.get('http://127.0.0.1:3000/user/' + username, config)
       return response;
     },
 
@@ -41,6 +47,14 @@ const requests = {
     getPollByToken(token){
       // const response = axios.get('http://127.0.0.1:3000/poll/lock/' + token)
       const response = axios.get('http://127.0.0.1:3000/poll/lack/' + token)
+      return response;
+    },
+
+    votePoll(token, user, choice){
+      const response = axios.post('http://127.0.0.1:3000/vote/lack/' + token, {
+        owner: user,
+        choice: choice
+      })
       return response;
     },
 

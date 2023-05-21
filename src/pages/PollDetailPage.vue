@@ -5,10 +5,9 @@
     <router-link to="/home" class="back-link">Zurück</router-link>
 
     <v-sheet border>
-
       <h1>{{ title }}</h1>
 
-      <div class="date-info">
+      <div v-if="deadline" class="date-info">
         <v-icon size="x-small" icon="mdi-calendar-range"></v-icon>
         <p id="deadline">Läuft bis: {{ deadline }}</p>
       </div>
@@ -22,59 +21,127 @@
       <v-form>
         <v-list>
           <v-list-item v-for="(option, index) in options" :key="index">
-            <v-list-item-content>{{ option }}</v-list-item-content>
+            <input type="checkbox" v-model="checkedItems[index]">
+            {{ option }}
           </v-list-item>
         </v-list>
       </v-form>
     </v-sheet>
 
+    <!-- Buttons -->
+    <v-row class="button-row" justify="end">
+      <v-col cols="auto">
+        <v-btn type="submit" color="success" @click="vote()">Abstimmen</v-btn>
+      </v-col>
+    </v-row>
+
   </div>
+
+    <!-- Dialog -->
+    <v-dialog v-model="dialog" width="auto" persistent>
+      <v-card>
+        <v-card-text>
+          <h1>Glückwunsch!</h1>
+          <p>Deine Abstimmung wurde erfolgreich abgegeben!</p>
+          <p class="hint"><strong>Hinweis:</strong> Bitte stelle sicher, den Edit-Token zu speichern. Du wirst ihn nicht erneut abrufen können.</p>
+        </v-card-text>
+
+        <v-container>
+          <v-text-field
+            v-model="editToken"
+            readonly
+            :append-icon="shareTokenCopied ? 'mdi-check' : 'mdi-content-copy'"
+            @click:append="copyShareToken"
+            variant="outlined"
+          ></v-text-field>
+        </v-container>
+
+        <v-card-actions>
+            <v-btn color="success" block @click="router.push('/home')">Weiter</v-btn>
+        </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   
 </template>
 
 <script setup>
 
-    import { onMounted } from 'vue';
-    import { useRoute} from 'vue-router';
-    import { ref } from 'vue';
-    import store from "../store/index.js"
+  import { onMounted } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
+  import { ref } from 'vue';
+  import store from "../store/index.js"
 
-    const route = useRoute();
-    const title = ref('')
-    const description = ref('')
-    const deadline = ref()
-    const options = ref([])
+  const route = useRoute();
+  const router = useRouter();
+  const title = ref('')
+  const description = ref('')
+  const deadline = ref()
+  const options = ref([])
+  const voices = ref()
+  const checkedItems = ref(new Array(options.value.length).fill(false));
+  const editToken = ref()
+  const shareTokenCopied = ref(false)
+  const dialog = ref(false)
 
-    onMounted(() => {
-        getPollDetails();
-    })
+  onMounted(() => {
+    getPollDetails();
+  })
 
-    async function getPollDetails() {
-      store.api.requests.getPollByToken(route.params.token)
-        .then(response => {
-          if (response.status === 200) {
-            title.value = response.data.poll.body.title
-            description.value = response.data.poll.body.description
+  async function getPollDetails() {
+    store.api.requests.getPollByToken(route.params.token)
+      .then(response => {
+        if (response.status === 200) {
+          title.value = response.data.poll.body.title
+          description.value = response.data.poll.body.description
+          voices.value = response.data.poll.body.setting.voices
 
-            // Datum lesen, Füge führende Nullen hinzu
-            let date = new Date(response.data.poll.body.setting.deadline)
-
+          // Datum lesen, Füge führende Nullen hinzu
+          let date = null
+          if (response.data.poll.body.setting.deadline) {
+            date = new Date(response.data.poll.body.setting.deadline)
             let day = date.getDate();
             let month = date.getMonth() + 1;
             let year = date.getFullYear();
             day = day < 10 ? "0" + day : day;
             month = month < 10 ? "0" + month : month;
             year = year < 10 ? "0" + year : year;
-
             deadline.value = day + "." + month + "." + year
-            
-            options.value = response.data.poll.body.options.map(option => option.text)
           }
-        })
-        .catch(error => {
-          console.log(error);
-      });
-    }
+          options.value = response.data.poll.body.options.map(option => option.text)
+
+        }
+      })
+      .catch(error => {
+        console.log(error);
+    });
+  }
+
+  async function vote() {
+    let voteChoices = []
+
+    checkedItems.value.forEach((element, index) => {
+      if (element) {
+        voteChoices.push({"id": index, "worst": false})
+      }
+    });
+
+    let username = null
+    store.state.username ? username = store.state.username : 'Guest'
+
+    store.api.requests.votePoll(route.params.token, {name: username, lock: true}, voteChoices)
+      .then(response => {
+        if (response.status === 200) {
+          console.log(response.data)
+          
+          editToken.value = response.data.edit.value
+          dialog.value = true
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
 
 </script>
 

@@ -24,7 +24,7 @@
     async function register() {
         try {
             const response = await store.api.requests.register(username.value, password.value)
-            console.log(response.status)
+            store.methods.setApiKey(response.data)
         } catch (error) {
             console.log(error)
         }

@@ -3,6 +3,7 @@ import api from "../services/api"
 
 const state = reactive({
     username: null,
+    apiKey: null,
     polls: []
 });
 
@@ -10,6 +11,10 @@ const methods = {
 
     setUsername(username) {
         state.username = username
+    },
+
+    setApiKey(key) {
+        state.apiKey = key
     },
 
     addPoll(poll) {
