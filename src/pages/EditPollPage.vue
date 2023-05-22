@@ -178,7 +178,7 @@
     })
 
     async function getPollDetails() {
-        store.api.requests.getPollByToken(route.params.token)
+        store.api.requests.getPollByShareToken(route.params.token)
         .then(response => {
             if (response.status === 200) {
                 title.value = response.data.poll.body.title

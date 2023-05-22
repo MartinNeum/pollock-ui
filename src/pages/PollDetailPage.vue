@@ -7,7 +7,10 @@
     <v-sheet border>
       <div class="title-row">
         <h1>{{ title }}</h1>
-        <v-btn size="small" density="default" icon="mdi-pencil" @click="edit()"></v-btn>
+        <div class="button-group">
+          <v-btn size="small" density="default" icon="mdi-pencil" @click="edit()"></v-btn>
+          <v-btn size="small" density="default" icon="mdi-delete" color="red" @click="deletePoll()"></v-btn>
+        </div>
       </div>
 
       <div v-if="deadline" class="date-info">
@@ -86,6 +89,27 @@
     </v-card>
   </v-dialog>
 
+  <!-- Dialog Delete -->
+  <v-dialog v-model="dialogDelete" width="auto">
+    <v-card>
+      <v-card-text>
+        <h1>Admin Token benötigt</h1>
+        <p>Bitte gib deinen Admin Token zum bearbeiten ein:</p>
+      </v-card-text>
+
+      <v-text-field
+        v-model="adminToken"
+        variant="outlined"
+        class="adminToken"
+        placeholder="Admin Token"
+      ></v-text-field>
+
+      <v-card-actions>
+        <v-btn color="success" block @click="continueToDelete()">Weiter zur Löschung</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   
 </template>
 
@@ -108,6 +132,7 @@
   let editTokenCopied = ref(false)
   const dialog = ref(false)
   const dialogEdit = ref(false)
+  const dialogDelete = ref(false)
   const adminToken = ref()
 
   onMounted(() => {
@@ -221,6 +246,23 @@
     }
   }
 
+  function deletePoll() {
+    dialogDelete.value = true
+  }
+
+  function continueToDelete() {
+      store.api.requests.deletePoll(adminToken.value)
+      .then(response => {
+        if (response.status === 200) {
+          console.log(response.data)
+          router.push('/home')
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
 </script>
 
 <style scoped>
@@ -272,6 +314,14 @@
   .adminToken {
     max-width: 90%;
     margin-left: 20px;
+  }
+
+  .button-group {
+    display: flex;
+  }
+
+  .button-group > .v-btn {
+    margin-left: 10px; /* Einstellbarer Abstand zwischen den Buttons */
   }
 
 </style>

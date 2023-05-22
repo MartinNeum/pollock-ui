@@ -49,6 +49,15 @@ const requests = {
       return response;
     },
 
+    /** ############################## */
+    /** ### GET /poll/lack/:token  ### */
+    /** ############################## */
+    getPollByShareToken(token){
+      // const response = axios.get(baseURL + '/poll/lock/' + token)
+      const response = axios.get(baseURL + '/poll/lack/' + token)
+      return response;
+    },
+
     /** ###############################*/
     /** ### PUT /poll/lack/:token  ### */
     /** ###############################*/
@@ -63,12 +72,11 @@ const requests = {
       return response;
     },
 
-    /** ############################## */
-    /** ### GET /poll/lack/:token  ### */
-    /** ############################## */
-    getPollByShareToken(token){
-      // const response = axios.get(baseURL + '/poll/lock/' + token)
-      const response = axios.get(baseURL + '/poll/lack/' + token)
+    /** ######################## */
+    /** DELETE /poll/lack/:token */
+    /** ######################## */
+    deletePoll(adminToken) {
+      const response = axios.delete(baseURL + '/poll/lack/' + adminToken)
       return response;
     },
 
