@@ -77,7 +77,7 @@
         v-model="adminToken"
         variant="outlined"
         class="adminToken"
-        label="Admin Token"
+        placeholder="Admin Token"
       ></v-text-field>
 
       <v-card-actions>
@@ -115,32 +115,64 @@
   })
 
   async function getPollDetails() {
-    store.api.requests.getPollByToken(route.params.token)
-      .then(response => {
-        if (response.status === 200) {
-          title.value = response.data.poll.body.title
-          description.value = response.data.poll.body.description
-          voices.value = response.data.poll.body.setting.voices
 
-          // Datum lesen, Füge führende Nullen hinzu
-          let date = null
-          if (response.data.poll.body.setting.deadline) {
-            date = new Date(response.data.poll.body.setting.deadline)
-            let day = date.getDate();
-            let month = date.getMonth() + 1;
-            let year = date.getFullYear();
-            day = day < 10 ? "0" + day : day;
-            month = month < 10 ? "0" + month : month;
-            year = year < 10 ? "0" + year : year;
-            deadline.value = day + "." + month + "." + year
+    if (route.params.token.startsWith("E-")) {
+      store.api.requests.getVote(route.params.token)
+        .then(response => {
+          if (response.status === 200) {
+            title.value = response.data.poll.body.title
+            description.value = response.data.poll.body.description
+            voices.value = response.data.poll.body.setting.voices
+  
+            // Datum lesen, Füge führende Nullen hinzu
+            let date = null
+            if (response.data.poll.body.setting.deadline) {
+              date = new Date(response.data.poll.body.setting.deadline)
+              let day = date.getDate();
+              let month = date.getMonth() + 1;
+              let year = date.getFullYear();
+              day = day < 10 ? "0" + day : day;
+              month = month < 10 ? "0" + month : month;
+              year = year < 10 ? "0" + year : year;
+              deadline.value = day + "." + month + "." + year
+            }
+            options.value = response.data.poll.body.options.map(option => option.text)
+
+            response.data.vote.choice.forEach(choice => {
+              checkedItems.value[choice.id] = true
+            })
           }
-          options.value = response.data.poll.body.options.map(option => option.text)
+        })
 
-        }
-      })
-      .catch(error => {
-        console.log(error);
-    });
+    } else {
+      store.api.requests.getPollByShareToken(route.params.token)
+        .then(response => {
+          if (response.status === 200) {
+            title.value = response.data.poll.body.title
+            description.value = response.data.poll.body.description
+            voices.value = response.data.poll.body.setting.voices
+  
+            // Datum lesen, Füge führende Nullen hinzu
+            let date = null
+            if (response.data.poll.body.setting.deadline) {
+              date = new Date(response.data.poll.body.setting.deadline)
+              let day = date.getDate();
+              let month = date.getMonth() + 1;
+              let year = date.getFullYear();
+              day = day < 10 ? "0" + day : day;
+              month = month < 10 ? "0" + month : month;
+              year = year < 10 ? "0" + year : year;
+              deadline.value = day + "." + month + "." + year
+            }
+            options.value = response.data.poll.body.options.map(option => option.text)
+  
+          }
+        })
+        .catch(error => {
+          console.log(error);
+      });
+    }
+    
   }
 
   async function vote() {
@@ -155,7 +187,7 @@
     let username = null
     store.state.username ? username = store.state.username : 'Guest'
 
-    store.api.requests.votePoll(route.params.token, {name: username, lock: true}, voteChoices)
+    store.api.requests.createVote(route.params.token, {name: username, lock: true}, voteChoices)
       .then(response => {
         if (response.status === 200) {
           console.log(response.data)

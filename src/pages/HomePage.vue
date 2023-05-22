@@ -60,15 +60,30 @@
   const searchPoll = ref('')
 
   async function search() {
-    store.api.requests.getPollByToken(searchPoll.value)
-      .then(response => {
-        if (response.status === 200) {
-          router.push('/poll/' + searchPoll.value);
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    if (searchPoll.value.startsWith("E-")) {
+      store.api.requests.getVote(searchPoll.value)
+        .then(response => {
+          if (response.status === 200) {
+            router.push('/poll/' + searchPoll.value);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+    } else {
+      store.api.requests.getPollByShareToken(searchPoll.value)
+        .then(response => {
+          if (response.status === 200) {
+            router.push('/poll/' + searchPoll.value);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+    }
+
   }
 
 </script>

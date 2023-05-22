@@ -1,10 +1,12 @@
 /* eslint-disable */
 import axios from 'axios'
 
+const baseURL = 'http://127.0.0.1:80'
+
 const requests = {
 
     register(username, password){
-      const response = axios.post('http://127.0.0.1:3000/user', {
+      const response = axios.post(baseURL + '/user', {
           name: username,
           password: password
         }
@@ -19,19 +21,22 @@ const requests = {
         }
       }
 
-      const response = axios.get('http://127.0.0.1:3000/user/' + username, config)
+      const response = axios.get(baseURL + '/user/' + username, config)
       return response;
     },
 
+    /** ######################## */
+    /** ### POST /poll/lack  ### */
+    /** ######################## */
     createPoll(title, description, options, setting, fixed, owner, users, visibility) {
-      const response = axios.post('http://127.0.0.1:3000/poll/lack/', {
+      const response = axios.post(baseURL + '/poll/lack/', {
         title: title,
         description: description,
         options: options,
         setting: setting,
         fixed: fixed
       })
-      // const response = axios.post('http://127.0.0.1:3000/poll/lock/', {
+      // const response = axios.post(baseURL + '/poll/lock/', {
       //   title: title,
       //   description: description,
       //   options: options,
@@ -44,8 +49,11 @@ const requests = {
       return response;
     },
 
+    /** ###############################*/
+    /** ### PUT /poll/lack/:token  ### */
+    /** ###############################*/
     updatePoll(adminToken, title, description, options, setting, fixed, owner, users, visibility) {
-      const response = axios.put('http://127.0.0.1:3000/poll/lack/' + adminToken, {
+      const response = axios.put(baseURL + '/poll/lack/' + adminToken, {
         title: title,
         description: description,
         options: options,
@@ -55,19 +63,52 @@ const requests = {
       return response;
     },
 
-    getPollByToken(token){
-      // const response = axios.get('http://127.0.0.1:3000/poll/lock/' + token)
-      const response = axios.get('http://127.0.0.1:3000/poll/lack/' + token)
+    /** ############################## */
+    /** ### GET /poll/lack/:token  ### */
+    /** ############################## */
+    getPollByShareToken(token){
+      // const response = axios.get(baseURL + '/poll/lock/' + token)
+      const response = axios.get(baseURL + '/poll/lack/' + token)
       return response;
     },
 
-    votePoll(token, user, choice){
-      const response = axios.post('http://127.0.0.1:3000/vote/lack/' + token, {
+    /** ########################## */
+    /** ### POST /vote/lack/:token */
+    /** ########################## */
+    createVote(token, user, choice){
+      const response = axios.post(baseURL + '/vote/lack/' + token, {
         owner: user,
         choice: choice
       })
       return response;
     },
+
+    /** ##################### */
+    /** GET /vote/lack/:token */
+    /** ##################### */
+    getVote(token) {
+      const response = axios.get(baseURL + '/vote/lack/' + token)
+      return response;
+    },
+
+    /** ##################### */
+    /** PUT /vote/lack/:token */
+    /** ##################### */
+    updateVote(token, user, choice) {
+      const response = axios.put(baseURL + '/vote/lack/' + token, {
+        owner: user,
+        choice: choice
+      })
+      return response;
+    },
+
+    /** ######################## */
+    /** DELETE /vote/lack/:token */
+    /** ######################## */
+    deleteVote(token) {
+      const response = axios.delete(baseURL + '/vote/lack/' + token)
+      return response;
+    }
 
 }
 
