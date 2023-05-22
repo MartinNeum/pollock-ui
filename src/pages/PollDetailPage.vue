@@ -37,7 +37,9 @@
     <!-- Buttons -->
     <v-row class="button-row" justify="end">
       <v-col cols="auto">
-        <v-btn type="submit" color="success" @click="vote()">Abstimmen</v-btn>
+        <v-btn v-if="isEditMode" type="submit" color="red" @click="deleteVote()">Abstimmung löschen</v-btn>
+        <v-btn v-if="isEditMode" type="submit" color="success" @click="updateVote()">Speichern</v-btn>
+        <v-btn v-else type="submit" color="success" @click="vote()">Abstimmen</v-btn>
       </v-col>
     </v-row>
 
@@ -134,6 +136,7 @@
   const dialogEdit = ref(false)
   const dialogDelete = ref(false)
   const adminToken = ref()
+  const isEditMode = ref(false)
 
   onMounted(() => {
     getPollDetails();
@@ -142,6 +145,8 @@
   async function getPollDetails() {
 
     if (route.params.token.startsWith("E-")) {
+      isEditMode.value = true
+
       store.api.requests.getVote(route.params.token)
         .then(response => {
           if (response.status === 200) {
@@ -251,16 +256,51 @@
   }
 
   function continueToDelete() {
-      store.api.requests.deletePoll(adminToken.value)
-      .then(response => {
-        if (response.status === 200) {
-          console.log(response.data)
-          router.push('/home')
-        }
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    store.api.requests.deletePoll(adminToken.value)
+    .then(response => {
+      if (response.status === 200) {
+        console.log(response.data)
+        router.push('/home')
+      }
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
+
+  function updateVote() {
+    let username = null
+    store.state.username ? username = store.state.username : 'Guest'
+
+    let voteChoices = []
+    checkedItems.value.forEach((element, index) => {
+      if (element) {
+        voteChoices.push({"id": index, "worst": false})
+      }
+    });
+
+    store.api.requests.updateVote(route.params.token, {name: username, lock: true}, voteChoices)
+    .then(response => {
+      if (response.status === 200) {
+        router.push('/home')
+      }
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
+
+  function deleteVote() {
+    store.api.requests.deleteVote(route.params.token)
+    .then(response => {
+      if (response.status === 200) {
+        console.log(response.data)
+        router.push('/home')
+      }
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
 </script>
@@ -321,7 +361,11 @@
   }
 
   .button-group > .v-btn {
-    margin-left: 10px; /* Einstellbarer Abstand zwischen den Buttons */
+    margin-left: 10px;
+  }
+
+  .button-row .v-btn {
+    margin-left: 10px;
   }
 
 </style>
