@@ -131,4 +131,8 @@
     margin-bottom: 40px;
   }
 
+  .v-card {
+    margin-top: 10px;
+  }
+
 </style>
