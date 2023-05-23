@@ -28,6 +28,8 @@
 
       <v-text-field
         v-model="guestName"
+        autofocus
+        @keydown.enter="continueWithoutAccount()"
         variant="outlined"
         class="dialog"
         placeholder="Wie möchtest du genannt werden?"
