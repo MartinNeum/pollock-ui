@@ -17,8 +17,6 @@
         votes: Array
     });
 
-    console.log(2)
-
     const data = {
         labels: props.labels,
         datasets: [

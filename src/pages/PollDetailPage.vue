@@ -34,13 +34,15 @@
       </v-form>
     </v-sheet>
 
-    <v-sheet v-if="isDataLoaded" border>
-      <h2>Ergebnisse</h2>
-      <div v-if="votes.length > 0">
-        <ResultChart else id="chart" :labels="options" :votes="votes"></ResultChart>
-      </div>
-      <div v-else>Es wurden noch keine Abstimmungen abgegeben.</div>
-    </v-sheet>
+    <div v-if="!isEditMode">
+      <v-sheet v-if="isDataLoaded" border>
+        <h2>Ergebnisse</h2>
+        <div v-if="votes.length > 0">
+          <ResultChart else id="chart" :labels="options" :votes="votes"></ResultChart>
+        </div>
+        <div v-else>Es wurden noch keine Abstimmungen abgegeben.</div>
+      </v-sheet>
+    </div>
 
     <!-- Buttons -->
     <v-row class="button-row" justify="end">
@@ -208,7 +210,6 @@
           votes.value = response.data.options.voted
           isDataLoaded.value = true
 
-          console.log(1)
         }
       })
       .catch(error => {
