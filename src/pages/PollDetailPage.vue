@@ -195,8 +195,6 @@
 
             options.value = response.data.poll.body.options.map(option => option.text)
 
-            console.log(response.data.vote.choice)
-
             response.data.vote.choice.forEach(choice => {
               if (choice.worst) {
                 worstItems.value[choice.id] = choice.worst
@@ -204,8 +202,6 @@
                 checkedItems.value[choice.id] = true
               }
             })
-
-            console.log(worstItems.value)
 
             isWorstAllowed.value = response.data.poll.body.setting.worst
           }

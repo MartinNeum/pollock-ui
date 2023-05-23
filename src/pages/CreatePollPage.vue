@@ -238,7 +238,7 @@
         // Configure Setting
         let setting = null
         if (setVoices.value) {
-            setting = { "voices": amountVoices.value, "worst": allowWorst.value, "deadline": date.value }
+            setting = { "voices": parseInt(amountVoices.value), "worst": allowWorst.value, "deadline": date.value }
         } else {
             setting = { "voices": options.value.length, "worst": allowWorst.value, "deadline": date.value }
         }
