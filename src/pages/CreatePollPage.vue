@@ -108,9 +108,21 @@
         <v-sheet border>
             <v-form>
                 <h2>Einstellungen</h2>
-                <v-checkbox v-model="publicPoll" color="blue-darken-3" hide-details label="Öffentlich"></v-checkbox>
-                <v-checkbox v-model="setDeadline" color="blue-darken-3" label="Frist festlegen"></v-checkbox>
 
+                <v-checkbox v-model="setVoices" color="blue-darken-3" hide-details label="Anzahl Stimmen festlegen"></v-checkbox>
+                <div v-if="setVoices">
+                    <v-text-field
+                        v-model="amountVoices"
+                        variant="outlined"
+                        placeholder="Anzahl Stimmen"
+                        autofocus
+                    ></v-text-field>
+                </div>
+
+                <v-checkbox v-model="allowWorst" color="blue-darken-3" hide-details label="Worst erlauben"></v-checkbox>
+                <v-checkbox v-model="publicPoll" color="blue-darken-3" hide-details label="Öffentlich"></v-checkbox>
+
+                <v-checkbox v-model="setDeadline" color="blue-darken-3" label="Frist festlegen"></v-checkbox>
                 <div v-if="setDeadline">
                     <h3>Datum auswählen</h3>
                     <VueDatePicker 
@@ -190,6 +202,9 @@
     const showTextField = ref(false);
     const newPerson = ref('');
     const showPersonTextField = ref(false);
+    const setVoices = ref(false)
+    const amountVoices = ref()
+    const allowWorst = ref(false)
     let shareTokenCopied = ref(false)
     let adminTokenCopied = ref(false)
 
@@ -220,7 +235,14 @@
 
     async function create() {
 
-        const setting = { "voices": 1, "worst": false, "deadline": date.value }
+        // Configure Setting
+        let setting = null
+        if (setVoices.value) {
+            setting = { "voices": amountVoices.value, "worst": allowWorst.value, "deadline": date.value }
+        } else {
+            setting = { "voices": options.value.length, "worst": allowWorst.value, "deadline": date.value }
+        }
+
         const fixed = [0]
         const owner = {"name": store.state.username, "lock": true}
         let visibility = "lock";
