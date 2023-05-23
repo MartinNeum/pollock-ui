@@ -34,6 +34,14 @@
       </v-form>
     </v-sheet>
 
+    <v-sheet v-if="isDataLoaded" border>
+      <h2>Ergebnisse</h2>
+      <div v-if="votes.length > 0">
+        <ResultChart else id="chart" :labels="options" :votes="votes"></ResultChart>
+      </div>
+      <div v-else>Es wurden noch keine Abstimmungen abgegeben.</div>
+    </v-sheet>
+
     <!-- Buttons -->
     <v-row class="button-row" justify="end">
       <v-col cols="auto">
@@ -117,10 +125,10 @@
 
 <script setup>
 
-  import { onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   import store from "../store/index.js"
+  import ResultChart from '../components/ResultChart.vue'
 
   const route = useRoute();
   const router = useRouter();
@@ -137,6 +145,8 @@
   const dialogDelete = ref(false)
   const adminToken = ref()
   const isEditMode = ref(false)
+  const votes = ref([])
+  const isDataLoaded = ref(false);
 
   onMounted(() => {
     getPollDetails();
@@ -176,31 +186,34 @@
 
     } else {
       store.api.requests.getPollByShareToken(route.params.token)
-        .then(response => {
-          if (response.status === 200) {
-            title.value = response.data.poll.body.title
-            description.value = response.data.poll.body.description
-            voices.value = response.data.poll.body.setting.voices
-  
-            // Datum lesen, Füge führende Nullen hinzu
-            let date = null
-            if (response.data.poll.body.setting.deadline) {
-              date = new Date(response.data.poll.body.setting.deadline)
-              let day = date.getDate();
-              let month = date.getMonth() + 1;
-              let year = date.getFullYear();
-              day = day < 10 ? "0" + day : day;
-              month = month < 10 ? "0" + month : month;
-              year = year < 10 ? "0" + year : year;
-              deadline.value = day + "." + month + "." + year
-            }
-            options.value = response.data.poll.body.options.map(option => option.text)
-  
+      .then(response => {
+        if (response.status === 200) {
+          title.value = response.data.poll.body.title
+          description.value = response.data.poll.body.description
+          voices.value = response.data.poll.body.setting.voices
+
+          // Datum lesen, Füge führende Nullen hinzu
+          let date = null
+          if (response.data.poll.body.setting.deadline) {
+            date = new Date(response.data.poll.body.setting.deadline)
+            let day = date.getDate();
+            let month = date.getMonth() + 1;
+            let year = date.getFullYear();
+            day = day < 10 ? "0" + day : day;
+            month = month < 10 ? "0" + month : month;
+            year = year < 10 ? "0" + year : year;
+            deadline.value = day + "." + month + "." + year
           }
-        })
-        .catch(error => {
-          console.log(error);
-      });
+          options.value = response.data.poll.body.options.map(option => option.text)
+          votes.value = response.data.options.voted
+          isDataLoaded.value = true
+
+          console.log(1)
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
     }
     
   }
