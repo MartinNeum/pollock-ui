@@ -18,8 +18,10 @@
         <p id="deadline">Läuft bis: {{ deadline }}</p>
       </div>
 
-      <h2>Beschreibung</h2>
-      <p>{{ description }}</p>
+      <div v-if="description.value != null">
+        <h2>Beschreibung</h2>
+        <p>{{ description }}</p>
+      </div>
     </v-sheet>
 
     <v-sheet border>
@@ -27,8 +29,16 @@
       <v-form>
         <v-list>
           <v-list-item v-for="(option, index) in options" :key="index">
-            <input type="checkbox" v-model="checkedItems[index]">
-            {{ option }}
+            <v-row>
+              <v-col>
+                <input type="checkbox" v-model="checkedItems[index]">
+                {{ option }}
+              </v-col>
+              <v-col v-if="isWorstAllowed" class="text-right">
+                <input type="checkbox" v-model="worstItems[index]">
+                Worst
+              </v-col>
+            </v-row>
           </v-list-item>
         </v-list>
       </v-form>
@@ -37,8 +47,8 @@
     <div v-if="!isEditMode">
       <v-sheet v-if="isDataLoaded" border>
         <h2>Ergebnisse</h2>
-        <div v-if="votes.length > 0">
-          <ResultChart else id="chart" :labels="options" :votes="votes"></ResultChart>
+        <div v-if="votesAvaliable">
+          <ResultChart else id="chart" :labels="options" :votes="votes" :worst="worst"></ResultChart>
         </div>
         <div v-else>Es wurden noch keine Abstimmungen abgegeben.</div>
       </v-sheet>
@@ -140,6 +150,7 @@
   const options = ref([])
   const voices = ref()
   const checkedItems = ref(new Array(options.value.length).fill(false));
+  const worstItems = ref(new Array(options.value.length).fill(false));
   const editToken = ref()
   let editTokenCopied = ref(false)
   const dialog = ref(false)
@@ -148,7 +159,10 @@
   const adminToken = ref()
   const isEditMode = ref(false)
   const votes = ref([])
+  const worst = ref([])
   const isDataLoaded = ref(false);
+  const votesAvaliable = ref(false)
+  const isWorstAllowed = ref(false)
 
   onMounted(() => {
     getPollDetails();
@@ -178,11 +192,22 @@
               year = year < 10 ? "0" + year : year;
               deadline.value = day + "." + month + "." + year
             }
+
             options.value = response.data.poll.body.options.map(option => option.text)
 
+            console.log(response.data.vote.choice)
+
             response.data.vote.choice.forEach(choice => {
-              checkedItems.value[choice.id] = true
+              if (choice.worst) {
+                worstItems.value[choice.id] = choice.worst
+              } else {
+                checkedItems.value[choice.id] = true
+              }
             })
+
+            console.log(worstItems.value)
+
+            isWorstAllowed.value = response.data.poll.body.setting.worst
           }
         })
 
@@ -206,8 +231,30 @@
             year = year < 10 ? "0" + year : year;
             deadline.value = day + "." + month + "." + year
           }
+
+          // Set options
           options.value = response.data.poll.body.options.map(option => option.text)
-          votes.value = response.data.options.voted
+
+          // console.log(response.data.options)
+
+          // Set votes
+          response.data.options.forEach(o => votes.value.push(o.voted.length))
+          votes.value.forEach(entry => {
+            if (entry > 0) {
+              votesAvaliable.value = true
+            }
+          })
+          // Set worst
+          response.data.options.forEach(o => worst.value.push(o.worst.length))
+          worst.value.forEach(entry => {
+            if (entry > 0) {
+              votesAvaliable.value = true
+            }
+          })
+
+          // Set isWorstAllowed
+          isWorstAllowed.value = response.data.poll.body.setting.worst
+
           isDataLoaded.value = true
 
         }
@@ -227,6 +274,13 @@
         voteChoices.push({"id": index, "worst": false})
       }
     });
+    worstItems.value.forEach((element, index) => {
+      if (element) {
+        voteChoices.push({"id": index, "worst": true})
+      }
+    });
+
+    console.log(voteChoices)
 
     let username = null
     store.state.username ? username = store.state.username : 'Guest'
@@ -234,8 +288,6 @@
     store.api.requests.createVote(route.params.token, {name: username, lock: true}, voteChoices)
       .then(response => {
         if (response.status === 200) {
-          console.log(response.data)
-          
           editToken.value = response.data.edit.value
           dialog.value = true
         }
@@ -273,7 +325,6 @@
     store.api.requests.deletePoll(adminToken.value)
     .then(response => {
       if (response.status === 200) {
-        console.log(response.data)
         router.push('/home')
       }
     })
@@ -308,7 +359,6 @@
     store.api.requests.deleteVote(route.params.token)
     .then(response => {
       if (response.status === 200) {
-        console.log(response.data)
         router.push('/home')
       }
     })
