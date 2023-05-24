@@ -243,7 +243,7 @@
             setting = { "voices": options.value.length, "worst": allowWorst.value, "deadline": date.value }
         }
 
-        const fixed = [0]
+        const fixed = []
         const owner = {"name": store.state.username, "lock": true}
         let visibility = "lock";
         if (publicPoll.value) {

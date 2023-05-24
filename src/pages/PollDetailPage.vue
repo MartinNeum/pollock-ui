@@ -18,7 +18,7 @@
         <p id="deadline">Läuft bis: {{ deadline }}</p>
       </div>
 
-      <div v-if="description.value != null">
+      <div>
         <h2>Beschreibung</h2>
         <p>{{ description }}</p>
       </div>

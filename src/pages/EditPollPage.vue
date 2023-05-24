@@ -56,6 +56,10 @@
                     <v-list-item v-for="(option, index) in options" :key="index">
                         <v-row>
                             <v-col cols="auto">
+                                <v-list-item-content>
+                                    <input type="checkbox" v-model="fixedItems[index]">
+                                    [Fixed]
+                                </v-list-item-content>
                                 <v-list-item-content>{{ option }}</v-list-item-content>
                             </v-col>
                             <v-col class="text-right">
@@ -189,6 +193,7 @@
     const setVoices = ref(false)
     const amountVoices = ref()
     const allowWorst = ref(false)
+    const fixedItems = ref(new Array(options.value.length).fill(false));
 
     onMounted(() => {
         getPollDetails();
@@ -215,6 +220,11 @@
                     amountVoices.value = response.data.poll.body.setting.voices
                 }
 
+                fixedItems.value = new Array(options.value.length).fill(false)
+                for (let i = 0; i < response.data.poll.body.fixed.length; i++) {
+                    let index = response.data.poll.body.fixed[i];
+                    fixedItems.value[index] = true;
+                }               
             }
         })
         .catch(error => {
@@ -249,6 +259,13 @@
 
     async function update() {
 
+        const fixed = []
+        fixedItems.value.forEach((element, index) => {
+            if (element) {
+                fixed.push(index)
+            }
+        });
+
         // Configure Setting
         let setting = null
         if (setVoices.value) {
@@ -257,7 +274,6 @@
             setting = { "voices": options.value.length, "worst": allowWorst.value, "deadline": date.value }
         }
         
-        const fixed = [0]
         const owner = {"name": store.state.username, "lock": true}
 
         let visibility = "lock";
