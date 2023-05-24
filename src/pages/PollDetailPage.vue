@@ -103,6 +103,7 @@
         variant="outlined"
         class="adminToken"
         placeholder="Admin Token"
+        autofocus
       ></v-text-field>
 
       <v-card-actions>
@@ -196,10 +197,12 @@
             options.value = response.data.poll.body.options.map(option => option.text)
 
             response.data.vote.choice.forEach(choice => {
-              if (choice.worst) {
-                worstItems.value[choice.id] = choice.worst
-              } else {
                 checkedItems.value[choice.id] = true
+            })
+
+            response.data.vote.choice.forEach(choice => {
+              if (choice.worst) {
+                  worstItems.value[choice.id] = choice.worst
               }
             })
 
@@ -231,17 +234,28 @@
           // Set options
           options.value = response.data.poll.body.options.map(option => option.text)
 
-          // console.log(response.data.options)
+          // Set voted and worst arrays
+          response.data.options.forEach(o => {
+            if (o.voted.length != 0) {
+              if (o.worst.length != 0) {
+                o.voted.forEach(v => {
+                  if (o.worst.includes(v)) {
+                    let index = o.voted.indexOf(v)
+                    o.voted.splice(index, 1)
+                  }
+                })
+              }
+            }
+            votes.value.push(o.voted.length)
+            worst.value.push(o.worst.length)
+          })
 
-          // Set votes
-          response.data.options.forEach(o => votes.value.push(o.voted.length))
+          // Ckeck votesAvaliable
           votes.value.forEach(entry => {
             if (entry > 0) {
               votesAvaliable.value = true
             }
           })
-          // Set worst
-          response.data.options.forEach(o => worst.value.push(o.worst.length))
           worst.value.forEach(entry => {
             if (entry > 0) {
               votesAvaliable.value = true
