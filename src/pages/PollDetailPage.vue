@@ -17,6 +17,9 @@
         <v-icon size="x-small" icon="mdi-calendar-range"></v-icon>
         <p id="deadline">Läuft bis: {{ deadline }}</p>
       </div>
+      <div v-if="isFixed" class="date-info">
+        <p id="deadline">Umfrage wurde beendet</p>
+      </div>
 
       <div>
         <h2>Beschreibung</h2>
@@ -164,6 +167,7 @@
   const isDataLoaded = ref(false);
   const votesAvaliable = ref(false)
   const isWorstAllowed = ref(false)
+  const isFixed = ref(false)
 
   onMounted(() => {
     getPollDetails();
@@ -207,6 +211,11 @@
             })
 
             isWorstAllowed.value = response.data.poll.body.setting.worst
+
+            // Set isFixed
+            if(response.data.poll.body.fixed.length > 0) {
+              isFixed.value = true
+            }
           }
         })
 
@@ -264,6 +273,11 @@
 
           // Set isWorstAllowed
           isWorstAllowed.value = response.data.poll.body.setting.worst
+
+          // Set isFixed
+          if(response.data.poll.body.fixed.length > 0) {
+            isFixed.value = true
+          }
 
           isDataLoaded.value = true
 
