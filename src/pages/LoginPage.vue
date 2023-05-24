@@ -62,6 +62,8 @@
       .then(response => {
         if (response.status === 200) {
           store.methods.setUsername(username.value);
+          store.methods.setApiKey(apiKey.value)
+          store.methods.setUsePollockEndpoints(true)
           router.push('/home');
         } else if (response.status === 400 || response.status === 404) {
           // showError('Falscher Username oder Passwort. Response: ' + response.status);

@@ -25,10 +25,15 @@ const requests = {
       return response;
     },
 
+    getUser(username) {
+      const response = axios.get(baseURL + '/user/' + username)
+      return response
+    },
+
     /** ######################## */
     /** ### POST /poll/lack  ### */
     /** ######################## */
-    createPoll(title, description, options, setting, fixed, owner, users, visibility) {
+    createPoll(title, description, options, setting, fixed) {
       const response = axios.post(baseURL + '/poll/lack/', {
         title: title,
         description: description,
@@ -36,16 +41,26 @@ const requests = {
         setting: setting,
         fixed: fixed
       })
-      // const response = axios.post(baseURL + '/poll/lock/', {
-      //   title: title,
-      //   description: description,
-      //   options: options,
-      //   setting: setting,
-      //   fixed: fixed,
-      //   owner: owner,
-      //   users: users,
-      //   visibility: visibility
-      // })
+      return response;
+    },
+
+    createPollPollock(apiKey, title, description, options, setting, fixed, owner, users, visibility) {
+      const headers = {
+        'API-KEY': apiKey
+      }
+
+      const data = {
+        title: title,
+        description: description,
+        options: options,
+        setting: setting,
+        fixed: fixed,
+        owner: owner,
+        users: users,
+        visibility: visibility
+      }
+      
+      const response = axios.post(baseURL + '/poll/lock/', data, { headers })
       return response;
     },
 
@@ -55,6 +70,16 @@ const requests = {
     getPollByShareToken(token){
       // const response = axios.get(baseURL + '/poll/lock/' + token)
       const response = axios.get(baseURL + '/poll/lack/' + token)
+      return response;
+    },
+
+    getPollByShareTokenPollock(token, apiKey){
+      const config = {
+        headers: {
+          'API-KEY': apiKey
+        }
+      }
+      const response = axios.get(baseURL + '/poll/lock/' + token, config)
       return response;
     },
 

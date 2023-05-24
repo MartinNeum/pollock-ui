@@ -200,36 +200,79 @@
     })
 
     async function getPollDetails() {
-        store.api.requests.getPollByShareToken(route.params.token)
-        .then(response => {
-            if (response.status === 200) {
-                title.value = response.data.poll.body.title
-                description.value = response.data.poll.body.description
-                voices.value = response.data.poll.body.setting.voices
-
-                if (response.data.poll.body.setting.deadline) {
-                    setDeadline.value = true
-                    date.value = response.data.poll.body.setting.deadline
+        
+        if (store.state.usePollockEndpoints) {
+            store.api.requests.getPollByShareTokenPollock(route.params.token, store.state.apiKey)
+            .then(response => {
+                if (response.status === 200) {
+                    title.value = response.data.poll.body.title
+                    description.value = response.data.poll.body.description
+                    voices.value = response.data.poll.body.setting.voices
+    
+                    if (response.data.poll.body.setting.deadline) {
+                        setDeadline.value = true
+                        date.value = response.data.poll.body.setting.deadline
+                    }
+    
+                    allowWorst.value = response.data.poll.body.setting.worst
+                    options.value = response.data.poll.body.options.map(option => option.text)
+    
+                    if (response.data.poll.body.setting.voices < options.value.length) {
+                        setVoices.value = true
+                        amountVoices.value = response.data.poll.body.setting.voices
+                    }
+    
+                    fixedItems.value = new Array(options.value.length).fill(false)
+                    for (let i = 0; i < response.data.poll.body.fixed.length; i++) {
+                        let index = response.data.poll.body.fixed[i];
+                        fixedItems.value[index] = true;
+                    }
+                    
+                    if (response.data.poll.security.visibility == "lack") {
+                        publicPoll.value = true
+                    } else {
+                        publicPoll.value = false
+                    }
                 }
+            })
+            .catch(error => {
+                console.log(error);
+            });
 
-                allowWorst.value = response.data.poll.body.setting.worst
-                options.value = response.data.poll.body.options.map(option => option.text)
-
-                if (response.data.poll.body.setting.voices < options.value.length) {
-                    setVoices.value = true
-                    amountVoices.value = response.data.poll.body.setting.voices
+        } else {
+            store.api.requests.getPollByShareToken(route.params.token)
+            .then(response => {
+                if (response.status === 200) {
+                    title.value = response.data.poll.body.title
+                    description.value = response.data.poll.body.description
+                    voices.value = response.data.poll.body.setting.voices
+    
+                    if (response.data.poll.body.setting.deadline) {
+                        setDeadline.value = true
+                        date.value = response.data.poll.body.setting.deadline
+                    }
+    
+                    allowWorst.value = response.data.poll.body.setting.worst
+                    options.value = response.data.poll.body.options.map(option => option.text)
+    
+                    if (response.data.poll.body.setting.voices < options.value.length) {
+                        setVoices.value = true
+                        amountVoices.value = response.data.poll.body.setting.voices
+                    }
+    
+                    fixedItems.value = new Array(options.value.length).fill(false)
+                    for (let i = 0; i < response.data.poll.body.fixed.length; i++) {
+                        let index = response.data.poll.body.fixed[i];
+                        fixedItems.value[index] = true;
+                    }               
                 }
+            })
+            .catch(error => {
+                console.log(error);
+            });
 
-                fixedItems.value = new Array(options.value.length).fill(false)
-                for (let i = 0; i < response.data.poll.body.fixed.length; i++) {
-                    let index = response.data.poll.body.fixed[i];
-                    fixedItems.value[index] = true;
-                }               
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        });
+        }
+        
     }
 
     function addOption() {

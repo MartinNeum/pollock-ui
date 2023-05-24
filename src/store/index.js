@@ -5,7 +5,8 @@ const state = reactive({
     username: null,
     apiKey: null,
     adminToken: null,
-    polls: []
+    polls: [],
+    usePollockEndpoints: null
 });
 
 const methods = {
@@ -20,6 +21,10 @@ const methods = {
 
     setAdminToken(token) {
         state.adminToken = token
+    },
+
+    setUsePollockEndpoints(value) {
+        state.usePollockEndpoints = value
     },
 
     addPoll(poll) {

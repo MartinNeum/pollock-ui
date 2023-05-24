@@ -72,16 +72,34 @@
         });
 
     } else {
-      store.api.requests.getPollByShareToken(searchPoll.value)
+
+      if (store.state.usePollockEndpoints) {
+        store.api.requests.getPollByShareTokenPollock(searchPoll.value, store.state.apiKey)
         .then(response => {
           if (response.status === 200) {
-            router.push('/poll/' + searchPoll.value);
+            console.log(response.data.poll.security.visibility == "lock")
+            if (response.data.poll.security.visibility == "lock") {
+              const tmpUser = {name: store.state.username, lock: true}
+              const x = response.data.poll.security.users.find(user => user.name == tmpUser.name)
+              if (x) {
+                router.push('/poll/' + searchPoll.value);
+              }
+            } else {
+              router.push('/poll/' + searchPoll.value);
+            }
           }
         })
-        .catch(error => {
-          console.log(error);
-        });
-
+      } else {
+        store.api.requests.getPollByShareToken(searchPoll.value)
+          .then(response => {
+            if (response.status === 200) {
+              router.push('/poll/' + searchPoll.value);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
     }
 
   }
